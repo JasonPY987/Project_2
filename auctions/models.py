@@ -8,6 +8,9 @@ class User(AbstractUser):
 class catagory(models.Model):
     NameCatagory = models.CharField(max_length=50)
     
+    def __str__(self):
+        return self.NameCatagory
+    
 
 class Listing(models.Model):
     ProductName = models.CharField(max_length=50)
@@ -18,4 +21,11 @@ class Listing(models.Model):
     isActive = models.BooleanField(default= True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="user")
     catagory = models.ForeignKey(catagory, on_delete=models.CASCADE, blank=True, related_name="catagory")
+    
+    def __str__(self):
+        return self.ProductName
+    
+def ListingCreate(request):
+    if request.method == "GET":
+        return render(request, "auctions/create.html")
     
