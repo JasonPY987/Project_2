@@ -63,5 +63,6 @@ def register(request):
         return render(request, "auctions/register.html")
     
     
-def ListingCreate():
-    return
+def ListingCreate(request):
+    if request.method == "GET":
+        return render(request, "auctions/create.html")

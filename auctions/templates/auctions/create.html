@@ -3,5 +3,40 @@
 {% block body %}
     <h2>Create new listing! </h2>
 
-    
+    <form auction="{% url 'create'%}" method="POST">
+        <div class="form-section">
+            <label for="title" class="form-label">Title:</label><br>
+            <input type="text" id="title" name="title" class="form-input" placeholder="Title"><br>
+        </div>
+        <div class="form-section">
+            <label for="description" class="form-label">Description:</label><br>
+            <textarea id="description" name="description" class="form-input" placeholder="Description"></textarea><br>
+        </div>
+        <div class="form-section">
+            <label for="image" class="form-label">Image URL:</label><br>
+            <input type="text" id="imageurl" name="imageurl" class="form-input" placeholder="Image URL"><br>
+        </div>
+        <div class="form-section">
+            <label for="price" class="form-label">Price:</label><br>
+            <input type="number" id="price" name="price" class="form-input" placeholder="Price"><br>
+        </div>
+        <div class="form-section">
+            <label for="catagory">Choose a listing catagory:</label>
+            <select id="menu" name="menu">
+                <option value="option1">Attack on Titan</option>
+                <option value="option2">Naruto</option>
+                <option value="option3">Black Clover </option>
+            </select>
+
+        </div>
+
+            <input type="submit" value="Submit" class="form-button">
+        <button style="background-color: #4caf50; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;">Click me!</button>
+
+        <style>
+            button:hover {
+              background-color: #45a049;
+            }
+        </style>
+    </form> 
 {% endblock %}

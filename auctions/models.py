@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.shortcuts import render
 
 
 class User(AbstractUser):
@@ -25,7 +26,5 @@ class Listing(models.Model):
     def __str__(self):
         return self.ProductName
     
-def ListingCreate(request):
-    if request.method == "GET":
-        return render(request, "auctions/create.html")
+
     
