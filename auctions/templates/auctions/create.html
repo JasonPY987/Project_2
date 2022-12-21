@@ -4,6 +4,7 @@
     <h2>Create new listing! </h2>
 
     <form auction="{% url 'create'%}" method="POST">
+        {% csrf_token %}
         <div class="form-section">
             <label for="title" class="form-label">Title:</label><br>
             <input type="text" id="title" name="title" class="form-input" placeholder="Title"><br>
@@ -23,9 +24,9 @@
         <div class="form-section">
             <label for="catagory">Choose a listing catagory:</label>
             <select id="menu" name="menu">
-                <option value="option1">Attack on Titan</option>
-                <option value="option2">Naruto</option>
-                <option value="option3">Black Clover </option>
+                {% for cat in categories %}
+                    <option value="{{ cat }}">{{cat}} </option>
+                {% endfor %}
             </select>
 
         </div>

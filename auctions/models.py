@@ -15,7 +15,6 @@ class catagory(models.Model):
 
 class Listing(models.Model):
     ProductName = models.CharField(max_length=50)
-    date = models.DateField()
     description = models.CharField(max_length=300)
     imageURL = models.CharField(max_length=1000)
     price = models.DecimalField(max_digits=10, decimal_places=2)
