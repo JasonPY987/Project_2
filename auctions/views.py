@@ -7,6 +7,30 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from .models import User, catagory, Listing
 
+def listing(request, id):
+    listingData = Listing.objects.get(pk=id)
+    listinginwatchlist = request.user in listingData.watchlist.all()
+    return render(request, "auctions/listing.html", {
+        "listing": listingData,
+        "listinginwatchlist": listinginwatchlist
+    })
+    
+def Display_Watch_List(request, id):
+    currentUser = request.user
+    listings = currentUser.watchlist.all()
+    return render(request, "acutions/watchlist.html")
+    
+def removeWatchList(request, id):
+    listingData = Listing.objects.get(pk=id)
+    currentUser = request.user
+    listingData.watchlist.remove(currentUser)
+    return HttpResponseRedirect(reverse("listing", args=(id,)))
+
+def addWatchList(request, id):
+    listingData = Listing.objects.get(pk=id)
+    currentUser = request.user
+    listingData.watchlist.add(currentUser)
+    return HttpResponseRedirect(reverse("listing", args=(id,)))
 
 def index(request):
     activeListings = Listing.objects.filter(isActive=True)
