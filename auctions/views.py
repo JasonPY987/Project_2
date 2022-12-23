@@ -5,20 +5,39 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import User, catagory, Listing
+from .models import User, catagory, Listing, Comment
 
 def listing(request, id):
     listingData = Listing.objects.get(pk=id)
     listinginwatchlist = request.user in listingData.watchlist.all()
+    allComments = Comment.objects.filter(listing=listingData)
     return render(request, "auctions/listing.html", {
         "listing": listingData,
-        "listinginwatchlist": listinginwatchlist
+        "listinginwatchlist": listinginwatchlist,
+        "allComments": allComments
     })
     
-def Display_Watch_List(request, id):
+def newComment(request, id):
     currentUser = request.user
-    listings = currentUser.watchlist.all()
-    return render(request, "acutions/watchlist.html")
+    listingData = Listing.objects.get(pk=id)
+    message = request.POST['newComment']
+    
+    addComment = Comment (
+        author = currentUser,
+        listing = listingData,
+        message = message
+    )
+    
+    addComment.save()
+    
+    return HttpResponseRedirect(reverse("listing", args=(id,)))
+    
+def Display_Watch_List(request):
+    currentUser = request.user
+    listings = currentUser.listingwatchlist.all()
+    return render(request, "auctions/Display_Watch_List.html", {
+        "listings": listings
+    })
     
 def removeWatchList(request, id):
     listingData = Listing.objects.get(pk=id)

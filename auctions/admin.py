@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Listing, User, catagory
+from .models import Listing, User, catagory, Comment
 
 
 
@@ -7,3 +7,4 @@ from .models import Listing, User, catagory
 admin.site.register(Listing)
 admin.site.register(User)
 admin.site.register(catagory)
+admin.site.register(Comment)
