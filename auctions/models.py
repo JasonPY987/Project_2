@@ -12,12 +12,16 @@ class catagory(models.Model):
     def __str__(self):
         return self.NameCatagory
     
+class Bid(models.Model):
+    bid = models.IntegerField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="userBid")
+    
 
 class Listing(models.Model):
     ProductName = models.CharField(max_length=50)
     description = models.CharField(max_length=300)
     imageURL = models.CharField(max_length=1000)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True , related_name="bidPrice")
     isActive = models.BooleanField(default= True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="user")
     catagory = models.ForeignKey(catagory, on_delete=models.CASCADE, blank=True, related_name="catagory")
@@ -33,5 +37,7 @@ class Comment(models.Model):
     
     def __str__(self):
         return f"{self.author} comment on {self.listing}"
+    
+
 
     

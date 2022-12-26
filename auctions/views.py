@@ -5,16 +5,34 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import User, catagory, Listing, Comment
+from .models import User, catagory, Listing, Comment, Bid
 
 def listing(request, id):
     listingData = Listing.objects.get(pk=id)
     listinginwatchlist = request.user in listingData.watchlist.all()
     allComments = Comment.objects.filter(listing=listingData)
+    Good_Owner = request.user.username == listingData.owner.username
     return render(request, "auctions/listing.html", {
         "listing": listingData,
         "listinginwatchlist": listinginwatchlist,
-        "allComments": allComments
+        "allComments": allComments,
+        "Good_Owner": Good_Owner,
+    })
+    
+def close_auction(request, id):
+    listingData = Listing.objects.get(pk=id)
+    listingData.isActive = False
+    listingData.save()
+    listinginwatchlist = request.user in listingData.watchlist.all()
+    allComments = Comment.objects.filter(listing=listingData)
+    Good_Owner = request.user.username == listingData.owner.username
+    return render(request, "auctions/listing.html", {
+        "listing": listingData,
+        "listinginwatchlist": listinginwatchlist,
+        "allComments": allComments,
+        "Good_Owner": Good_Owner,
+        "update": True, 
+        "message": "Congradulations, you just got paid!! "
     })
     
 def newComment(request, id):
@@ -34,7 +52,7 @@ def newComment(request, id):
     
 def Display_Watch_List(request):
     currentUser = request.user
-    listings = currentUser.listingwatchlist.all()
+    listings = currentUser.listingWatchlist.all()
     return render(request, "auctions/Display_Watch_List.html", {
         "listings": listings
     })
@@ -138,13 +156,45 @@ def ListingCreate(request):
         category = request.POST["menu"]
         cuttentuser = request.user 
         categoryData = catagory.objects.get(NameCatagory=category)
+        bid = Bid(bid=int(price), user=cuttentuser)
+        bid.save()
         newListing = Listing(
             ProductName=title,
             description = description,
             imageURL = imageurl,
-            price = float(price),
+            price = bid,
             catagory = categoryData,
             owner = cuttentuser
+            
         )
         newListing.save()
         return HttpResponseRedirect(reverse(index))
+    
+def addBid(request,id):
+    newBid = request.POST['newBid']
+    listingData = Listing.objects.get(pk=id)
+    listinginwatchlist = request.user in listingData.watchlist.all()
+    allComments = Comment.objects.filter(listing=listingData)
+    Good_Owner = request.user.username == listingData.owner.username
+    if int(newBid) > listingData.price.bid:
+        updateBid = Bid(user=request.user, bid=int(newBid))
+        updateBid.save()
+        listingData.price = updateBid
+        listingData.save()
+        return render(request, "auctions/listing.html", {
+            "listing": listingData,
+            "message": "sucessful bid update",
+            "update": True,
+            "listinginwatchlist": listinginwatchlist,
+            "allComments": allComments,
+            "Good_Owner": Good_Owner,
+        })
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": listingData,
+            "message": "Failed bid update",
+            "update": False,
+            "listinginwatchlist": listinginwatchlist,
+            "allComments": allComments,
+            "Good_Owner": Good_Owner,
+        })
