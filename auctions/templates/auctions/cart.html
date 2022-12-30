@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% for Listing in orders %}
+  <p>Items: {{ order.items }}</p>
+  <p>Total cost: {{ order.total_cost }}</p>
+  <p>Date placed: {{ order.date_placed }}</p>
+{% endfor %}
+
+{% endblock %}

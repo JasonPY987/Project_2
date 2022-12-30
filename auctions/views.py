@@ -198,3 +198,11 @@ def addBid(request,id):
             "allComments": allComments,
             "Good_Owner": Good_Owner,
         })
+        
+def cart(request):
+    listingData = Listing.objects.all
+    orders = Listing.objects.filter(ProductName=request.ProductName)
+    return render(request, "auctions/cart.html", {
+        'orders': orders,
+        'listingData': listingData 
+    })
